@@ -1,0 +1,19 @@
+---
+title: "About"
+format: html
+editor: visual
+---
+
+This project was developed by **Data Dazzlers**. For [INFO 526 - Data Analysis & Visualization](https://datavizaz.org/) at the University of Arizona, taught by Dr. Greg Chism. The team is comprised of the following team members.
+
+-   **Naitik Shah** : 1st year Grad student pursuing Information Science - Human Centered Computing.
+
+-   **Varun Soni** : Final Year Grad student pursuing Information Science with emphasis on Machine Learning.
+
+-   **Vidhyananth Sivashanmugam** : 2nd year Grad student pursuing Data Science.
+
+-   **Mohammad Ali Farmani** : 2nd year PhD student in Hydrology and Atmospheric Sciences at University of Arizona.
+
+-   **Sanja Dmitrovic** : Ph.D. in Optical Sciences at the University of Arizona. Next role will be remote sensing software engineer at NASA Goddard Space Flight Center.
+
+-   **Jiayue He** : 2nd year Grad student Pursuing Information Science - Human Centered Computing.

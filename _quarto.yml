@@ -1,0 +1,32 @@
+project:
+  type: website
+
+website:
+  title: "<img src='/images/car-crash-logo.jpg' alt='carcrash Logo' style='width: 2.7em; height: 2.3em; border-radius: 20%;'> <b> Tucson Car Collision Analysis</b>"
+  navbar:
+    right:
+      - icon: github
+        href: href: https://github.com/naitik2608/tucson-car-collision-analysis
+ # Needs to be changed to your project repo
+    left:
+      - text: Project
+        href: index.qmd
+      - text: Proposal
+        href: proposal.qmd
+      - text: Presentation
+        href: presentation.qmd
+      - text: Dashboard
+        href: dashboard.qmd
+      - text: About
+        href: about.qmd
+
+format:
+  html:
+    code-fold: true
+    theme:
+      light: flatly
+      dark: darkly
+    toc: true
+engine: knitr
+execute:
+  freeze: auto

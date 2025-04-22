@@ -1,0 +1,256 @@
+---
+title: "Tucson Car Collision Analysis"
+subtitle: "INFO 526 - Spring 2024 - Final Project"
+author:
+ - name: "**Data Dazzlers**: <br> Sanja Dmitrovic, Jiayue He, Vidhyananth Sivashanmugam,<br> Naitik Shah, Varun Soni, Mohammad Ali Farmani" 
+title-slide-attributes:
+  data-background-image: images/car-crash-logo.jpg
+  data-background-size: stretch
+  data-background-opacity: "0.7"
+  data-slide-number: none
+format:
+  revealjs:
+    theme: league
+    transition: slide
+    background-transition: fade
+  
+editor: visual
+execute:
+  echo: false
+---
+
+```{r, warning=FALSE, message=FALSE}
+#| label: load-pkgs
+#| message: false
+#| include: false 
+
+if(!require(pacman))
+  install.packages("pacman")
+
+pacman::p_load(
+  tidyverse,
+  dlookr,
+  kableExtra,
+  reader,
+  scales,
+  gt,
+  DT,
+  janitor,
+  stringer,
+  leaflet,
+  highcharter,
+  waffle,
+  htmlwidgets,
+  palmerpenguins
+  )
+
+```
+
+```{r}
+#| label: setup
+#| include: false
+
+# Plot theme
+ggplot2::theme_set(ggplot2::theme_minimal(base_size = 11))
+
+# For better figure resolution
+knitr::opts_chunk$set(
+  fig.retina = 3, 
+  dpi = 300, 
+  fig.width = 6, 
+  fig.asp = 0.618 
+  )
+```
+
+```{r}
+#| label: load-data
+#| message: false
+#| echo: false
+#| results: hide
+
+boolan_tranform <- function(vector) {
+  result <- ifelse(vector == 1, "Yes", "No")
+  return(result)
+}
+
+cars_data <- read.csv("data/tucson_data.csv") |>
+  clean_names() |>
+  mutate(
+    collision_date  = format(ymd_hms(collision_date), "%m/%d/%Y"), # Clean date type
+    year = year_occu,
+    month = month_abbr,
+    hour = ifelse(time_occu == 0,"12:00 AM",
+               ifelse(nchar(as.character(time_occu)) == 3,
+                      paste0(substr(as.character(time_occu), 1, 1), ":", ... =
+                               substr(as.character(time_occu), 2, 3), " AM"),
+                      format(strptime(as.character(time_occu), 
+                                      format = "%H%M", tz = "UTC"), 
+                             format = "%I:%M %p"))),
+    weekday = if_else(day %in% c("Saturday", "Sunday"), "Weekend", "Weekday"),
+    offense_desc = if_else(str_detect(offense_desc, "^\\s*$"), "Unknown", offense_desc),
+    offense_desc_main = str_split_fixed(offense_desc, ":", n = 2)[, 1],
+    offense_desc_sub = if_else(str_detect(
+                    str_split_fixed(offense_desc, ":", n = 2)[, 2], "^\\s*$"),
+                    "Other", 
+                    str_split_fixed(offense_desc, ":", n = 2)[, 2]),
+    offense_type = case_when(
+          str_detect(offense_desc_main, "Fatal") ~ "Fatal Accidents",
+          str_detect(offense_desc_main, "Injury") ~ "Injury Accidents",
+          str_detect(offense_desc_main, "Property Damage") ~ "Property Damage Accidents",
+          str_detect(offense_desc_main, "Driving Under the Influence") ~ "DUI Accidents",
+          str_detect(offense_desc_main, "Non-Traffic") ~ "Non-Traffic Accidents",
+          str_detect(offense_desc_main, "Other") ~ "Other Vehicle Accidents",
+          TRUE ~ "Miscellaneous Accidents"
+          ),
+    collision_type = if_else(str_detect(collision_type, "^\\s*$"),
+                             "Unknown", collision_type),
+    in_out_vehicle = case_when(
+      grepl("Pedestrian|Bicycle|Parked_Unit|Single Pedestrian", 
+          collision_type, ignore.case = TRUE) ~ "Out of Vehicle",
+      grepl("Vehicle|Motorcycle|Bus|Train", 
+            collision_type, ignore.case = TRUE) ~ "In Vehicle",
+    TRUE ~ "Unknown"),
+    distance = if_else(str_detect(distance, "^\\s*$"), "Unknown", distance),
+    traffic_control_device = boolan_tranform(traffic_control_device),
+    work_zone = boolan_tranform(work_zone),
+    violation_too_close = boolan_tranform(violation_too_close),
+    violation_traffic_control_device = boolan_tranform(violation_traffic_control_device),
+    violation_turning = boolan_tranform(violation_turning),
+    violation_wrong_way = boolan_tranform(violation_wrong_way),
+    violation_lane = boolan_tranform(violation_lane),
+    violation_crosswalk = boolan_tranform(violation_crosswalk),
+    violation_failure_to_yield = boolan_tranform(violation_failure_to_yield),
+    violation_aggressive_driving = boolan_tranform(violation_aggressive_driving),
+    collision_neighborhd = if_else(str_detect(collision_neighborhd, "^\\s*$"),
+                                   "Uknw", collision_neighborhd), 
+    collision_direction = if_else(str_detect(collision_direction, "^\\s*$"),
+                                  "Unknown", collision_direction), 
+    accident_location = if_else(str_detect(accident_location, "^\\s*$"),
+                                "Unknown", accident_location)
+    ) |>
+  select(accident_id, collision_date, year, month, day, weekday, hour, time_occu,
+         offense_desc_main, offense_desc_sub,offense_type, injury_severity,
+         collision_type, collision_manner, division, distance, hitand_run,
+         pedestrian, fatal_collision, intersection_related, traffic_control_device,
+         work_zone, violation_speed, total_injuries, latitude, longitude, 
+         violation_too_close, violation_traffic_control_device,violation_turning,
+         violation_wrong_way, violation_lane, violation_crosswalk, ward,
+         violation_failure_to_yield, violation_aggressive_driving, operator_impaired,
+         operator_distracted, x_coordinate, y_coordinate, total_fatalities,
+         collision_neighborhd, collision_direction, accident_location,
+         intersection_related, in_out_vehicle) 
+
+data("penguins")
+```
+
+## Introduction {.smaller}
+
+::: incremental
+-   The primary goal of the project is to develop a **user-friendly, visualization tool** that provides detailed insights into the frequency, severity, and causes of traffic accidents in Tucson.
+
+-   We use the **GIS Data from the City of Tucson**, which contains publicly-available records of vehicle collisions from the Tucson Police Department covering the period from year 2018 to 2023.
+
+-   Examples of key variables in this data set are:
+
+    -   Date of collision
+
+    -   Injury severity
+
+    -   Manner of collision
+
+    -   Fatality status
+:::
+
+## Project Approach
+
+::: incremental
+-   We will use Quarto dashboard to create dashboard, allowing users to get insights and explore the data based on specific criteria (e.g., time period, accident severity).
+-   Implement Leaflet for interactive maps to display clustered data and identify accident hot-spots within Tucson using the latitude and longitude coordinates in the data-set.
+-   Use ggplot2 and Plotly for creating dynamic and static visualizations that can be adjusted according to user.
+:::
+
+## Question 1
+
+::: incremental
+-   Does day of the week and/or time of day affect severity and the number of accidents?
+
+-   Key variables to use:
+
+    -   Collision-date (date of collision in YMD format)
+    -   TimeOccu (time at which accident occurred)
+    -   MonthAccu (month in which accident occurred)
+    -   Day (day of week in which accident occurred)
+:::
+
+## Frequency of Accidents Per Month {.smaller}
+
+-   Tucson experienced the most accidents in 2019 compared to any other year. 2020 sees the least amount of accidents.
+
+-   Comparing year wise Fewer accidents occur in summer months than winter months.
+
+    ![](images/yearly_plot.PNG){fig-align="center" width="873"}
+
+## Frequency of Accidents Per Day and Hour {.smaller}
+
+-   Weekdays see higher frequencies of car accidents than weekends.
+
+    -   For weekdays (Monday - Friday), most accidents occur from 1pm to 6 pm. However, weekends do see an increase in accidents in the afternoon/evening as well.
+
+        ![](images/question_1_part_2.PNG){fig-align="center"}
+
+## Question 2
+
+::: incremental
+-   What is the relationship between the type of violation and if the accident resulted in injury or fatality?
+
+-   Key variables to use:
+
+    -   Fatal Collision (if collision resulted in fatality, yes/no)
+    -   Total Fatalities (number of fatalities due to accidents)
+    -   Injury Severity (how serious the injury caused by accident was)
+    -   Violation/Operator Variables (intersection, speeding, impairment, and distracted)
+:::
+
+## Injury Severity {.smaller}
+
+-   It is observed that 50.2% of accidents do not result in injury.
+-   However, 49.8% of drivers do experience injury from car accidents in Tucson. The most common injury types are non-incapacitating injury and possible injury.
+-   It is also seen that 1.6% of accidents with fatal injury.
+
+![](images/injury_severity.png){fig-align="center"}
+
+## Collision reason {.smaller}
+
+-   The most common location of collisions is at intersections (74.7%).
+
+-   38.1% of collisions involve a distracted driver, 18.5% involve a speeding driver, and 6.9% involve an impaired driver.
+
+![](images/question_2_part_2.PNG){fig-align="center"}
+
+## Challenges {.smaller}
+
+Interventions or policies implemented based on the analysis may have unintended consequences or lead to unforeseen challenges. Anticipating and mitigating these risks requires careful planning, stakeholder engagement, and flexibility to adapt to changing circumstances.
+
+Real-life applications may face challenges related to the availability and quality of data. Not all cities may have publicly available datasets on traffic accidents, and even if they do, the data may be incomplete, inconsistent, or outdated. This can limit the usefulness of the analysis and its applicability to other locations.
+
+## Limitations {.smaller}
+
+The scale and resolution of the visualizations may not always be optimal for conveying meaningful insights. For example, maps with too much detail may overwhelm the viewer, while maps with insufficient detail may fail to capture important geographic features or variations.
+
+Similarly, when visualizing temporal trends in accidents (e.g., by day of week or time of day), the choice of temporal aggregation (e.g., hourly, daily, monthly) can influence the perceived patterns and trends.
+
+Aggregating data over longer time periods may smooth out fluctuations but could also mask important variations at finer temporal resolutions.
+
+## Conclusion {.smaller}
+
+Identification of High-Risk Areas: The dashboard effectively pinpoints traffic violation hotspots, aiding in route planning and increasing awareness of dangerous zones.
+
+-   Enhanced Safety Measures: It empowers users, especially universities, to take specific actions like improving pedestrian safety through better lighting, signage, and enforcement around high-risk areas.
+
+-   Informed Decision-Making: By visualizing traffic data, the dashboard supports data-driven decisions that can lead to a significant reduction in traffic-related incidents.
+
+-   Overall Impact: This tool is a valuable asset for promoting safer driving behaviors and enhancing road safety for drivers and pedestrians alike.
+
+## Thank You
+
+![](images/thank_you.png){fig-align="center"}
