@@ -95,9 +95,11 @@ This project was developed under the mentorship of **Dr. Greg Chism** as part of
 ```bash
 quarto preview
 
+---
 
 📫 Contact
 Want to collaborate or learn more?
 
-🔗 LinkedIn: naitikshah2608
+📧 Email: n********h@arizona.edu
 
+💼 LinkedIn: naitikshah2608
