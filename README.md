@@ -75,10 +75,10 @@ The primary goal is to provide a **user-friendly analytical dashboard** for unde
 
 ## 🧑‍💻 Contributors
 
-- Sanja Dmitrovic  
+- **Naitik Shah**  
 - Jiayue He  
 - Vidhyananth Sivashanmugam  
-- **Naitik Shah**  
+- Sanja Dmitrovic  
 - Varun Soni  
 - Mohammad Ali Farmani
 
@@ -94,3 +94,10 @@ This project was developed under the mentorship of **Dr. Greg Chism** as part of
 
 ```bash
 quarto preview
+
+
+📫 Contact
+Want to collaborate or learn more?
+
+🔗 LinkedIn: naitikshah2608
+
