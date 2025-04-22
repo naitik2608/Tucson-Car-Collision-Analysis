@@ -1,36 +1,96 @@
-TUCSON CAR COLLISION ANALYSIS:
+# 🚗 Tucson Car Collision Analysis
 
-Final project repo for INFO 526 - Spring 2024.
+**INFO 526 - Data Analysis & Visualization**  
+University of Arizona | Spring 2024  
+📍 [Live Dashboard](https://info-526-s24.github.io/project-final-DataDazzlers/)
 
-INTRODUCTION:
+![Header Banner](images/car-crash-logo.jpg)
 
-The focus of this project is to develop a user-friendly, interactive dashboard that provides the user detailed insights into the frequency, severity, and causes of traffic accidents in Tucson.
+---
 
-DATA SET:
+## 📌 Introduction
 
-We utilize the GIS Data from the City of Tucson, which includes publicly-available records of car crashes from the Tucson Police Department from the years 2018 through 2023.
+This project delivers an interactive and visually rich dashboard that provides comprehensive insights into traffic collisions in Tucson, AZ. The dashboard is crafted with **Quarto**, using **ggplot2**, **Plotly**, and **Leaflet** for layered data interaction and geographical mapping.
 
-PRIMARY OBJECTIVES:
+---
 
-Our goal is to develop a user-friendly dashboard using Quarto that enables users to explore and gain insights from the accident data based on various criteria such as time period and accident severity. The four main steps to accomplish this objective are:
+## 📂 Dataset
 
-1. Implement Leaflet to incorporate interactive maps within the dashboard.
+We used public GIS records from the **City of Tucson**, covering traffic collision data from **2018 to 2023** as reported by the Tucson Police Department. The dataset includes:
+- Collision type
+- Injury & fatality counts
+- Violation categories
+- Latitude and longitude for spatial mapping
 
-2. Display clustered accident data and allow users to identify accident hotspots within Tucson using latitude and longitude coordinates from the dataset.
- 
-3. Utilize ggplot2 and Plotly to create both dynamic and static visualizations within the dashboard.
- 
-4. Adjust visualizations based on user preferences and criteria, enhancing the user's ability to understand and analyze the accident data effectively.
+---
 
-CONTRIBUTORS:
+## 🎯 Objectives
 
-Sanja Dmitrovic,
-Jiayue He,
-Vidhyananth Sivashanmugam,
-Naitik Shah,
-Varun Soni,
-Mohammad Ali Farmani
+The primary goal is to provide a **user-friendly analytical dashboard** for understanding accident patterns based on:
+- Time (year/month/day/hour)
+- Severity (injury/fatality)
+- Location (division/ward/neighborhood)
+- Causes (speeding, DUI, distracted driving, etc.)
 
-DISCLOSURE:
+### Key Features:
+✅ Interactive map with **Leaflet**  
+✅ Clustered accident points using **lat/lon**  
+✅ Time-series and violation analysis using **ggplot2**  
+✅ Animated and static charts with **Plotly**  
+✅ Dynamic tab structure for modular insights
 
-The project is accomplished under the guidance of Dr. Greg Chism for [INFO 526 - Data Analysis & Visualization](https://datavizaz.org/) at the University of Arizona.
+---
+
+## 📸 Visual Previews
+
+### 🔹 Dashboard Overview
+![Overview](images/dashboard-overview.png)
+
+### 🔹 Traffic Violations
+![Violations](images/dashboard-violations.png)
+
+### 🔹 Collision Occurrence
+![Occurrence](images/dashboard-occurrence.png)
+
+### 🔹 Collision Reasons
+![Reasons](images/dashboard-reasons.png)
+
+### 🔹 Collision Locations
+![Locations](images/dashboard-location.png)
+
+---
+
+## 🧪 Technologies Used
+
+| Tool/Library   | Purpose                            |
+|----------------|------------------------------------|
+| `Quarto`       | Dashboard rendering                |
+| `R / ggplot2`  | Statistical visualizations         |
+| `Plotly`       | Interactive charts                 |
+| `Leaflet`      | Geographic mapping                 |
+| `HTML/CSS`     | Custom styling for layout          |
+| `GitHub Pages` | Hosting and deployment             |
+
+---
+
+## 🧑‍💻 Contributors
+
+- Sanja Dmitrovic  
+- Jiayue He  
+- Vidhyananth Sivashanmugam  
+- **Naitik Shah**  
+- Varun Soni  
+- Mohammad Ali Farmani
+
+---
+
+## 📜 Disclosure
+
+This project was developed under the mentorship of **Dr. Greg Chism** as part of [INFO 526 - Data Analysis & Visualization](https://datavizaz.org/), University of Arizona.
+
+---
+
+## 🚀 How to Run
+
+```bash
+quarto preview
