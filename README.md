@@ -97,8 +97,10 @@ quarto preview
 
 ---
 
-## 📫 Contact
+## 📫 Contact Me
 
-Want to collaborate or learn more?
-  
-- **LinkedIn**: [naitikshah2608](https://www.linkedin.com/in/naitikshah2608/)
+If you'd like to connect, collaborate, or learn more about this project, feel free to reach out!
+ 
+- 💼 **LinkedIn**: [linkedin.com/in/naitikshah2608](https://www.linkedin.com/in/naitikshah2608/)
+
+> _Let’s turn data into direction — together!_
