@@ -97,9 +97,8 @@ quarto preview
 
 ---
 
-📫 Contact
+## 📫 Contact
+
 Want to collaborate or learn more?
-
-📧 Email: n********h@arizona.edu
-
-💼 LinkedIn: naitikshah2608
+  
+- **LinkedIn**: [naitikshah2608](https://www.linkedin.com/in/naitikshah2608/)
